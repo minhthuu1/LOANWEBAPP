@@ -68,13 +68,13 @@ st.sidebar.header("Nhập thông tin hồ sơ")
 # Nhập liệu
 applicant = {
     "CreditScore": st.sidebar.number_input("Credit Score", 300, 850, 650),
-    "MonthlyIncome": st.sidebar.number_input("Monthly Income", 0, 100000, 4000),
-    "NetWorth": st.sidebar.number_input("Net Worth", 0, 1000000, 70000),
-    "DebtToIncomeRatio": st.sidebar.slider("Debt to Income Ratio", 0.0, 1.0, 0.5),
-    "UtilityBillsPaymentHistory": st.sidebar.slider("Utility Bills Payment History", 0.0, 1.0, 0.75),
+    "MonthlyIncome": st.sidebar.number_input("Monthly Income", 0, 100000, 6000),
+    "NetWorth": st.sidebar.number_input("Net Worth", 0, 1000000, 100000),
+    "DebtToIncomeRatio": st.sidebar.slider("Debt to Income Ratio", 0.0, 1.0, 0.25),
+    "UtilityBillsPaymentHistory": st.sidebar.slider("Utility Bills Payment History", 0.0, 1.0, 0.85),
     "MonthlyDebtPayments": st.sidebar.number_input("Monthly Debt Payments", 0, 100000, 800),
     "LoanAmount": st.sidebar.number_input("Loan Amount", 0, 1000000, 25000),
-    "LoanDuration": st.sidebar.number_input("Loan Duration (months)", 1, 360, 24),
+    "LoanDuration": st.sidebar.number_input("Loan Duration (months)", 1, 360, 12),
     "Experience": st.sidebar.number_input("Experience (years)", 0, 70, 5),
     "NumberOfDependents": st.sidebar.slider("Number of Dependents", 0, 10, 2),
     "MaritalStatus": st.sidebar.selectbox("Marital Status", ["Single", "Married", "Divorced", "Widowed"]),
