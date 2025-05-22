@@ -93,8 +93,8 @@ if st.button("Dự đoán khoản vay"):
     )
     input_processed = pd.concat([input_num, input_cat], axis=1)
 
-    prediction = model.predict(input_processed)[0]
     probability = model.predict_proba(input_processed)[0, 1]
+    prediction = 1 if probability > 0.75 else 0
 
     st.write(f"### Kết quả dự đoán: {'✅ Được duyệt' if prediction == 1 else '❌ Không được duyệt'}")
     st.write(f"Xác suất duyệt: **{round(probability * 100, 2)}%**")
