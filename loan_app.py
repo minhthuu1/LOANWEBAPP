@@ -105,5 +105,5 @@ if st.button("Dự đoán khoản vay"):
         for s in suggestions:
             st.markdown(
                 f"- 💰 **${s['new_amount']}** trong **{s['new_duration']} tháng** – "
-                f"Xác suất chấp nhận: **{s['proba']}%**"
+                f"Xác suất chấp nhận: **{s['proba']:.2f}%**"
             )
