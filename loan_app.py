@@ -97,7 +97,7 @@ if st.button("Dự đoán khoản vay"):
     prediction = 1 if probability > 0.75 else 0
 
     st.write(f"### Kết quả dự đoán: {'✅ Được duyệt' if prediction == 1 else '❌ Không được duyệt'}")
-    st.write(f"Xác suất duyệt: **{round(probability * 100, 2)}%**")
+    st.write(f"Xác suất duyệt: **{probability * 100:.2f}%**")
 
     if prediction == 0:
         st.subheader("👉 Gợi ý các phương án thay thế:")
@@ -105,5 +105,5 @@ if st.button("Dự đoán khoản vay"):
         for s in suggestions:
             st.markdown(
                 f"- 💰 **${s['new_amount']}** trong **{s['new_duration']} tháng** – "
-                f"Xác suất chấp nhận: **{round(s['proba'], 2)}%**"
+                f"Xác suất chấp nhận: **{s['proba']:.2f}%**"
             )
