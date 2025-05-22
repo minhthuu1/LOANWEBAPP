@@ -51,7 +51,7 @@ def suggest_top1_per_reduction(applicant, model, encoder, num_features, cat_feat
                     "new_amount": round(new_loan, 1),
                     "add_months": add_month,
                     "new_duration": modified["LoanDuration"],
-                    "proba": round(proba * 100, 2)
+                    "proba": proba * 100
                 }
 
         if best_option:
@@ -105,5 +105,5 @@ if st.button("Dự đoán khoản vay"):
         for s in suggestions:
             st.markdown(
                 f"- 💰 **${s['new_amount']}** trong **{s['new_duration']} tháng** – "
-                f"Xác suất chấp nhận: **{s['proba']:.2f}%**"
+                f"Xác suất chấp nhận: **{round(s['proba'], 2)}%**"
             )
