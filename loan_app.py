@@ -61,20 +61,20 @@ def suggest_top1_per_reduction(applicant, model, encoder, num_features, cat_feat
 
 
 # Giao diện Streamlit
-st.title("Loan Approval Prediction App")
+st.title("Dự đoán phê duyệt khoản vay")
 
 st.sidebar.header("Nhập thông tin hồ sơ")
 
 # Nhập liệu
 applicant = {
     "CreditScore": st.sidebar.number_input("Credit Score", 300, 850, 650),
-    "MonthlyIncome": st.sidebar.number_input("Monthly Income", 0, 100000, 6000),
-    "NetWorth": st.sidebar.number_input("Net Worth", 0, 1000000, 100000),
-    "DebtToIncomeRatio": st.sidebar.slider("Debt to Income Ratio", 0.0, 1.0, 0.25),
-    "UtilityBillsPaymentHistory": st.sidebar.slider("Utility Bills Payment History", 0.0, 1.0, 0.85),
+    "MonthlyIncome": st.sidebar.number_input("Monthly Income", 0, 100000, 4000),
+    "NetWorth": st.sidebar.number_input("Net Worth", 0, 1000000, 70000),
+    "DebtToIncomeRatio": st.sidebar.slider("Debt to Income Ratio", 0.0, 1.0, 0.5),
+    "UtilityBillsPaymentHistory": st.sidebar.slider("Utility Bills Payment History", 0.0, 1.0, 0.75),
     "MonthlyDebtPayments": st.sidebar.number_input("Monthly Debt Payments", 0, 100000, 800),
     "LoanAmount": st.sidebar.number_input("Loan Amount", 0, 1000000, 25000),
-    "LoanDuration": st.sidebar.number_input("Loan Duration (months)", 1, 360, 12),
+    "LoanDuration": st.sidebar.number_input("Loan Duration (months)", 1, 360, 24),
     "Experience": st.sidebar.number_input("Experience (years)", 0, 70, 5),
     "NumberOfDependents": st.sidebar.slider("Number of Dependents", 0, 10, 2),
     "MaritalStatus": st.sidebar.selectbox("Marital Status", ["Single", "Married", "Divorced", "Widowed"]),
@@ -84,7 +84,7 @@ applicant = {
     "LoanPurpose": st.sidebar.selectbox("Loan Purpose", ["Auto", "Home", "Debt Consolidation", "Education", "Other"])
 }
 
-if st.button("Dự đoán khoản vay"):
+if st.button("Dự đoán khả năng cho vay"):
     input_df = pd.DataFrame([applicant])
     input_num = input_df[num_features]
     input_cat = pd.DataFrame(
@@ -94,16 +94,31 @@ if st.button("Dự đoán khoản vay"):
     input_processed = pd.concat([input_num, input_cat], axis=1)
 
     probability = model.predict_proba(input_processed)[0, 1]
-    prediction = 1 if probability > 0.75 else 0
+    prediction = 1 if probability > 0.5 else 0
 
     st.write(f"### Kết quả dự đoán: {'✅ Được duyệt' if prediction == 1 else '❌ Không được duyệt'}")
     st.write(f"Xác suất duyệt: **{probability * 100:.2f}%**")
 
-    if prediction == 0:
-        st.subheader("👉 Gợi ý các phương án thay thế:")
+    if probability < 0.75:
+        # Thông báo
+        if 0.5 < probability < 0.75:
+            st.info("✅ Khoản vay có khả năng được duyệt, nhưng bạn có thể cân nhắc các phương án tốt hơn:")
+        elif probability <= 0.5:
+            st.warning("❌ Khoản vay hiện tại khó được duyệt. Dưới đây là một số gợi ý:")
+
+        # Gợi ý
         suggestions = suggest_top1_per_reduction(applicant, model, encoder, num_features, cat_features)
+        st.subheader("👉 Gợi ý các phương án vay thay thế:")
+
         for s in suggestions:
             st.markdown(
                 f"- 💰 **${s['new_amount']}** trong **{s['new_duration']} tháng** – "
                 f"Xác suất chấp nhận: **{s['proba']:.2f}%**"
+            )
+
+        # Thông báo nếu không có phương án nào > 75%
+        if not any(s['proba'] > 75 for s in suggestions):
+            st.error(
+                "📭 Hiện tại chưa có mức vay nào phù hợp với hồ sơ của bạn.\n\n"
+                "📌 Bạn vui lòng cải thiện hồ sơ và kiểm tra lại sau.\n\nXin cảm ơn!"
             )
